@@ -7,4 +7,4 @@ x <- boot(law, theta_hat, R= 5000)
 hist(x$t)
 print(x$t0)
 
-#test comment
+#test com
