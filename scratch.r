@@ -1,13 +1,22 @@
 library(boot)
+set.seed(5)
 
-# Draw resample: sample size of 5.
-# Draw 5 random integers in range 1:14 w/ replacement from uniform
-sample_index <- sample(1:14, 5, replace = T)
 
-# Draw the elements from the original sample with those indexs
-resample <- law[sample_index,]
+boot1 <- function(data, n) {
+  correlations <- integer(n)
+  for (i in 1:n) {
+    sample_index <- sample(1:14, 5, replace = T)
+    resample <- law[sample_index,]
+    resample.cor <- cor(resample$LSAT, resample$GPA)
+    correlations[i] <- resample.cor
+  }
+  mean(correlations)
+}
 
-# Define our sample statstic (correlation)
+statistic.me <- boot1(law, 1000)
+
 theta_hat <- function(data, index){
   return(cor(data[index,1], data[index,2]))
 }
+
+statistic.r <- boot(law, theta_hat, R = 5000)$t0
