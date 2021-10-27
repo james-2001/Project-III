@@ -6,6 +6,22 @@ cor.stat <- function(data, i) {
   cor(data[i,1], data[i,2])
 }
 
-bs.trend <- boot(trends, cor.stat, R = 5000)
-hist(bs.trend$t)
-bs.ci <- boot.ci(bs.trend, type = "perc")
+r = 5000
+
+bs <- boot(trends, cor.stat, R = r)
+
+bs.ci.norm1 <- boot.ci(bs, type = "norm")
+bs.ci.basic1 <- boot.ci(bs, type = "basic")
+
+hist(bs$t)
+abline(v = bs.ci.norm1$normal[c(2,3)], col = 3)
+abline(v = bs.ci.basic1$basic[c(4,5)], col = 2)
+
+bs.bias <- mean(bs$t - bs$t0)
+bs.std <- var(bs$t)**0.5
+
+bs.ci.norm2 <- c(bs$t0 - bs.bias - 1.96*bs.std, bs$t0 - bs.bias + 1.96*bs.std)
+
+bs.sorted <- sort(bs$t)
+bs.quantiles <- c(bs.sorted[round(r*0.975)], bs.sorted[round(r*0.025)])
+bs.ci.basic2 <- 2*bs$t0 - bs.quantiles
