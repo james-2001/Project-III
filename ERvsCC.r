@@ -29,5 +29,3 @@ bs.ci.basic2 <- 2*bs$t0 - bs.quantiles
 
 bs.ci.perc2 <- sort(bs.quantiles)
 # bs bias is small so might be a reasonable assumption
-
-
