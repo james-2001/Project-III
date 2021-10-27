@@ -13,7 +13,7 @@ bootstrap = np.array([np.mean(sk.resample(data))
                       for _ in range(R)])
 
 bs_basic_py = sp.bootstrap((data,), np.mean, 
-             method = 'basic').confidence_interval
+                           method = 'basic').confidence_interval
 print(bs_basic_py)
 
 bs_quantiles = sort(bootstrap)[[round(R*0.025),round(R*0.975)]]
