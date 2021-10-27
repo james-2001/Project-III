@@ -12,6 +12,7 @@ bs <- boot(trends, cor.stat, R = r)
 
 bs.ci.norm1 <- boot.ci(bs, type = "norm")
 bs.ci.basic1 <- boot.ci(bs, type = "basic")
+bs.ci.perc1 <- boot.ci(bs, type = "perc")
 
 hist(bs$t)
 abline(v = bs.ci.norm1$normal[c(2,3)], col = 3)
