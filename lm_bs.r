@@ -1,35 +1,31 @@
 library(boot)
 
-model <- lm(behaviour~plumage, data = ducks)
-plot(ducks)
-abline(model$coefficients[1], model$coefficients[2])
-
-residual_std_error <- function(data, i){
-  d <- data[i]
-  ((sum(d**2))/(length(d) - 2))**0.5
-  
-}
+model <- lm(plumage~behaviour, data = ducks)
+plot(ducks, ylim = c(-3, 20))
+abline(model$coefficients, col = 3)
 
 
 model_intercept <- function(data, i){
   d <- data[i,]
-  md <- lm(behaviour ~ plumage, data = d)
+  md <- lm(plumage ~ behaviour, data = d)
   md$coefficients[1]
 }
 
 
 model_grad <- function(data, i){
   d <- data[i,]
-  md <- lm(behaviour ~ plumage, data = d)
+  md <- lm(plumage ~ behaviour, data = d)
   md$coefficients[2]
 }
 
-residual_boot <- boot(model$residuals, statistic = residual_std_error,
-                      R = 5000)
 
-residual_boot.ci <- boot.ci(residual_boot, type = "norm")
+duck_grad <- boot(ducks,model_grad, R = 5000)
+duck_grad.ci <- boot.ci(duck_grad, type = 'perc')
+duck_intercept <- boot(ducks,model_intercept, R = 5000)
+duck_intercept.ci <- boot.ci(duck_intercept, type = 'perc')
+
+abline(duck_intercept$t0, duck_grad$t0, col = 2, lty = 2)
+abline(duck_intercept.ci$percent[4], duck_grad.ci$percent[4], col = 5)
+abline(duck_intercept.ci$percent[5], duck_grad.ci$percent[5], col = 5)
 
 
-
-duck_resample_grad <- boot(ducks,model_grad, R = 5000)
-duck_resample_intercept <- boot(ducks,model_intercept, R = 5000)
