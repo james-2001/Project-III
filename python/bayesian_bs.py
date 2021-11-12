@@ -5,28 +5,20 @@ import sklearn.utils as sk
 
 class BB:
     def __init__(self, input_data, R) -> None:
-        self.data = input_data
+        self.data = np.array(input_data)
         self.R = R
-        self.t0 = None
+        self.t0 = np.mean(input_data)
         self.t = [None]
-
-    def expectation(self,dist):
-        return sum([point[1]*point[0] for point in dist])
+        self.n = len(input_data)
 
 
-    def bb_replication(self):
-        samp = sk.resample(self.data)
-        uniform_sample = [0] + sorted(np.random.uniform(0,1,16)) + [1]
-        gaps = [uniform_sample[i+1] - uniform_sample[i] for i in range(15)]
-        bb_dist = list(zip(samp, gaps))
-        bb_mean = self.expectation(bb_dist)
-        return bb_mean
+    def bs_average(self):
+        dir_samples = np.random.dirichlet([1]*self.n, self.R)
+        self.t = (dir_samples * self.data).sum(axis=1)
 
-    def bayesian_bs(self):
-        self.t = [self.bb_replication(self.data) for _ in range(self.R)]
-        self.t0 = np.mean(self.t)
-        return self.t
-    
 
 if __name__ == "__main__":
     norm_data = np.random.normal(0,1,30)
+    bs = BB(norm_data, 5000)
+
+
