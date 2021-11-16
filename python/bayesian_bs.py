@@ -1,7 +1,4 @@
 import numpy as np
-from numpy.lib.function_base import quantile
-import scipy as sp
-import sklearn.utils as sk
 
 
 class BB:
@@ -19,7 +16,6 @@ class BB:
         for i in range(self.R):
             t[i] = np.average(self.data, weights=dir_samp[i])
         return t 
- 
 
 
 if __name__ == "__main__":
@@ -27,5 +23,4 @@ if __name__ == "__main__":
     bs = BB(norm_data, 5000)
     print(bs.t0)
     print(np.quantile(bs.t, [0.025,0.975]))
-
 
