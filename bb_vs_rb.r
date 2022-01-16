@@ -1,5 +1,6 @@
 library(mc2d)
 library(boot)
+library(tictoc)
 set.seed(5)
 
 data <- rnorm(5000)
@@ -16,9 +17,12 @@ bayesian_b <- function(R) {
 theta_hat <- function(data, i){
     mean(data[i])
 }
-
+tic("bb")
 bb_t <- bayesian_b(5000)
+toc()
+tic("rb")
 rb <- boot(data, theta_hat, 5000)
+toc()
 
 par(mfrow = c(1,2))
 hist(bb_t)
@@ -27,13 +31,3 @@ abline(v = quantile(bb_t, c(0.025, 0.5, 0.975)),
 hist(rb$t)
 abline(v = quantile(rb$t, c(0.025, 0.5, 0.975)),
        col = "red")
-
-# n <- 3
-# r <- seq(500, 5000, length.out = n)
-# bb_cis <- data.frame("r" = r, "lower" = rep(0, n),
-#                      "upper" = rep(0, n))
-
-# for (i in 1:n) {
-#     bb_cis$lower[i] <- quantile(bayesian_b(r[i]), 0.025)
-#     bb_cis$upper[i] <- quantile(bayesian_b(r[i]), 0.975)
-# }
