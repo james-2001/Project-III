@@ -8,6 +8,6 @@ n <- nrow(survival)
 
 t <- rep(0, R)
 for (i in 1:R) {
-    pi <- rdirichlet(1, rep(1,n))
-    t[i] <- sum(pi * model$residuals**2) / (n - 2)
+    pi <- rdirichlet(1, rep(1, n))
+    t[i] <- (n * sum(pi * model$residuals**2)) / (n - 2)
 }
