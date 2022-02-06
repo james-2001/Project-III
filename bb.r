@@ -36,3 +36,9 @@ mean_hat <- function(data, i){
 }
 data_bb_mean <- bb_mean(data, 5000)
 data_b <- boot(data, mean_hat, 5000)
+
+hist(data_b$t, freq = F)
+
+m <- mean(data_b$t)
+s <- var(data_b$t)**0.5
+curve(dnorm(x,m,s), add = T)
