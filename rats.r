@@ -28,3 +28,4 @@ hist(t, cex.lab = 2, main = NULL)
 abline(v = quantile(t, c(0.025, 0.975)), col = "red")
 abline(v = mean(t), col = "blue")
 dev.off()
+
