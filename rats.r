@@ -3,8 +3,8 @@ library(mc2d)
 
 R <- 5000
 
-model <- lm(log(surv) ~ dose, data = survival)
-n <- nrow(survival)
+model <- lm(log(surv) ~ dose, data = survival[-13,])
+n <- nrow(survival[-13,])
 
 dev.new(width = 20, height = 20)
 pdf("ratlm4.pdf")
@@ -30,23 +30,28 @@ abline(v = mean(t), col = "blue")
 dev.off()
 
 
-theta_hat <- function(data, i){
+theta_hat <- function(data,i){
     d <- data[i,]
     fit <- lm(log(surv)~dose, data = d)
-    v <- summary(fit)$sigma**2
+    v <- sum(fit$residuals**2)/12
+    return(v)
     }
 
-eb_t <- boot(survival, theta_hat, R = 5000)
+eb_t <- boot(survival[-13, ], theta_hat, R = 5000)
 
 dev.new()
 pdf("cd_compare.pdf")
-plot(ecdf(t),
+plot(ecdf(t-mean(t)),
      main = NULL,
      cex.lab = 1.5)
-lines(ecdf(eb_t$t), col = "red")
-legend(4.5,0.2,
+lines(ecdf(eb_t$t-mean(eb_t$t)), col = "red")
+legend(0,.2,
        legend = c("Bayesian Bootstrap", "Efron's Bootstrap"),
        col = c("black", "red"),
        lty = 1, box.lty = 0,
        cex = 1.5)
 dev.off()
+
+par(mfrow=c(2,1))
+hist(t)
+hist(eb_t$t)
