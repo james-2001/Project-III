@@ -31,21 +31,19 @@ dev.off()
 
 
 theta_hat <- function(data,i){
-    d <- data[i,]
-    fit <- lm(log(surv)~dose, data = d)
-    v <- sum(fit$residuals**2)/12
-    return(v)
+    d <- data[i]
+    v <- sum(d**2)/12
     }
 
-eb_t <- boot(survival[-13, ], theta_hat, R = 5000)
+eb_t <- boot(model$residuals, theta_hat, R = 5000)
 
 dev.new()
 pdf("cd_compare.pdf")
-plot(ecdf(t-mean(t)),
+plot(ecdf(t),
      main = NULL,
      cex.lab = 1.5)
-lines(ecdf(eb_t$t-mean(eb_t$t)), col = "red")
-legend(0,.2,
+lines(ecdf(eb_t$t), col = "red")
+legend(5,.2,
        legend = c("Bayesian Bootstrap", "Efron's Bootstrap"),
        col = c("black", "red"),
        lty = 1, box.lty = 0,
