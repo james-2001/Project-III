@@ -15,9 +15,12 @@ for (i in 1:r) {
     bb_mean[i] <- sum(weights[i, ] * data)
 }
 
-par(mfrow = c(2, 2))
-hist(b_mean$t)
-hist(bb_mean)
-
-plot(ecdf(b_mean$t))
-lines(ecdf(bb_mean), col = "red")
+dev.new()
+pdf("plots/outliers.pdf")
+plot(ecdf(b_mean$t), col = "red", main = NULL)
+lines(ecdf(bb_mean))
+legend(10, 0.1,
+       legend = c("Bayesian Bootstrap", "Efron's Bootstrap"),
+       col = c("black", "red"),
+       lty = 1, box.lty = 0)
+dev.off()
