@@ -1,7 +1,15 @@
 library(rpart)
 library(boot)
+set.seed(2)
 
-s <- sample(1:nrow(kyphosis), 60)
-learning <- kyphosis[s]
-training <- kyphosis[-s]
+s <- sample(seq_len(nrow(kyphosis)), 60)
+learning <- kyphosis[s, ]
+training <- kyphosis[-s, ]
 
+fit <- rpart(Kyphosis ~ Age + Number + Start, data = kyphosis)
+pred <- predict(fit, training)
+
+training_classes <- colnames(pred)[max.col(pred, ties.method = "first")]
+
+misclass <- length(which(training$Kyphosis != training_classes))
+r <- misclass / nrow(training)
