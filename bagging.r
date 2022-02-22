@@ -1,6 +1,5 @@
 library(rpart)
 library(boot)
-set.seed(2)
 
 s <- sample(seq_len(nrow(kyphosis)), 60)
 learning <- kyphosis[s, ]
