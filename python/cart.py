@@ -26,13 +26,13 @@ print(misclassified/len(train_tes))
 
 bagging = []
 boot = [resample(list(zip(learning_data, learning_class))) for _ in range(25)]
-#print(boot)
 for bs_sample in boot:
     bs_data = [x[0] for x in bs_sample]
     bs_class = [x[1] for x in bs_sample]
     bs_clf = tree.DecisionTreeClassifier()
     bagging.append(bs_clf.fit(bs_data, bs_class))
 
-bs_test = array([phi.predict(training_data) for phi in bagging])
-bagged_pred = mode(bs_test, axis = 1).mode
-print(bagged_pred)
+bs_test_full = array([phi.predict(training_data) for phi in bagging])
+bs_test = mode(bs_test_full, axis =0).mode.flatten()
+bs_misclass = sum([bs_test[i]!=training_class[i] for i in range(len(training_class))])
+print(bs_misclass/len(training_class))
