@@ -12,3 +12,7 @@ training_classes <- colnames(pred)[max.col(pred, ties.method = "first")]
 
 misclass <- length(which(training$Kyphosis != training_classes))
 r <- misclass / nrow(training)
+
+m <- 25
+
+t <- sample(nrow(learning), nrow(learning), replace = T)
