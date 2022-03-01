@@ -1,18 +1,15 @@
 library(rpart)
 library(boot)
+library(ipred)
 
 s <- sample(seq_len(nrow(kyphosis)), 60)
 learning <- kyphosis[s, ]
 training <- kyphosis[-s, ]
 
 fit <- rpart(Kyphosis ~ Age + Number + Start, data = kyphosis)
-pred <- predict(fit, training)
+pred <- predict(fit, type = "class")
 
 training_classes <- colnames(pred)[max.col(pred, ties.method = "first")]
 
-misclass <- length(which(training$Kyphosis != training_classes))
+misclass <- length(which(learning$Kyphosis != training_classes))
 r <- misclass / nrow(training)
-
-m <- 25
-
-t <- sample(nrow(learning), nrow(learning), replace = T)

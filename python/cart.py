@@ -19,10 +19,11 @@ training_data, training_class = data[:int(2/3*len(data))], klass[:int(2/3*len(da
 
 clf = tree.DecisionTreeClassifier()
 clf = clf.fit(learning_data, learning_class)
-train_tes = clf.predict(training_data)
+train_test = clf.predict(training_data)
 
-misclassified = sum([train_tes[i]!=training_class[i] for i in range(len(train_tes))])
-print(misclassified/len(train_tes))
+
+misclassified = sum([train_test[i]!=training_class[i] for i in range(len(train_test))])
+print(misclassified/len(train_test))
 
 bagging = []
 boot = [resample(list(zip(learning_data, learning_class))) for _ in range(25)]
