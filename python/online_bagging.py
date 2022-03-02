@@ -12,6 +12,8 @@ def process(new):
         k = poisson()
         bagged_data[i]["data"]+=k*[d]
         bagged_data[i]["target"] += k*[t]
+
+
 for point in full:
     process(point)
 
