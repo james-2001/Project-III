@@ -18,4 +18,4 @@ n=len(target)
 
 # bagged_trees = [tree.DecisionTreeClassifier().fit(bb_data[i], bb_target[i]) for i in range(r)]
 
-bag = BaggingClassifier(n_estimators=25).fit(data,target,sample_weight=dirichlet([1]*n))
+bag = BaggingClassifier(n_estimators=25).fit(data,target,sample_weight=dirichlet([1]*n)) #do you want new dir samples each time?
