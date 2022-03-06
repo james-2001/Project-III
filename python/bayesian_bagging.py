@@ -43,12 +43,18 @@ class BayesianBaggingClassifier:
             cv_predict = self.bb_predict(training_data, bag)
             scores.append(sum([cv_predict[i]!=training_targets[i] for i in range(len(training_targets))])/len(training_targets))
         return sum(scores)/cv
+    
+    def score(self, t_data, t_target):
+        n=len(t_target)
+        preds = self.bb_predict(t_data)
+        return sum([preds[i]!=t_target[i] for i in range(n)])/n
             
 
 if __name__ == "__main__":
-    load= load_digits()
-    d,t = load.data, load.target
+    d,t = make_classification()
+    dl, tl = d[:30], t[:30]
+    dt,tt = d[30:], t[30:]
     print(len(t))
     bag = BayesianBaggingClassifier(n_estimators=25)
-    #bag.fit(d,t)
-    print(bag.cross_val(d,t))
+    bag.fit(dl,tl)
+    print(bag.score(dt,tt))
