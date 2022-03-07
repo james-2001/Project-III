@@ -1,7 +1,7 @@
 from numpy import array_split, array, delete, partition
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-from numpy.random import dirichlet
+from numpy.random import dirichlet, exponential
 from statistics import mode 
 from sklearn.datasets import make_classification, load_digits
 
@@ -24,6 +24,24 @@ class BayesianBaggingClassifier:
         bag = [DecisionTreeClassifier().fit(data, target, sample_weight=weight)
                for weight in dirichlet([1]*loc_n, self.r)]
         return bag
+
+    def online_fit(self, data, target):
+        self.n = len(target)
+        bagged_data = [{"data":[], "target":[], "weight":[]} for _ in range(self.r)]
+        for i in range(self.n):
+            bagged_data = self.online_process(data[i], target[i], bagged_data)
+        self.estimators =  [DecisionTreeClassifier().fit(learn["data"], learn["target"], sample_weight=learn["weight"])
+                            for learn in bagged_data]
+    
+    def online_process(self, point, target, bagged_data):
+        for i in range(self.r):
+            k = exponential()
+            bagged_data[i]["data"] += [point]
+            bagged_data[i]["target"] += [target]
+            bagged_data[i]["weight"] += [k]
+        return bagged_data
+
+
 
     def bb_predict(self, new_data, bag = None):
         if bag is None:
@@ -54,7 +72,6 @@ if __name__ == "__main__":
     d,t = make_classification()
     dl, tl = d[:30], t[:30]
     dt,tt = d[30:], t[30:]
-    print(len(t))
     bag = BayesianBaggingClassifier(n_estimators=25)
-    bag.fit(dl,tl)
+    bag.online_fit(dl,tl)
     print(bag.score(dt,tt))
