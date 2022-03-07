@@ -1,8 +1,8 @@
 from sklearn.tree import DecisionTreeClassifier
-from numpy.random import dirichlet, exponential
+from numpy.random import dirichlet, exponential, seed
 from statistics import mode
 from sklearn.datasets import make_classification
-
+from random import shuffle
 
 class BayesianBaggingClassifier:
     def __init__(self, n_estimators) -> None:
@@ -72,9 +72,16 @@ class BayesianBaggingClassifier:
 
 
 if __name__ == "__main__":
+    seed(0)
     d, t = make_classification()
+    m = list(zip(d, t))
+    shuffle(m)
+    d, t = zip(*m)
     dl, tl = d[:30], t[:30]
     dt, tt = d[30:], t[30:]
     bag = BayesianBaggingClassifier(n_estimators=25)
-    bag.online_fit(dl, tl)
+    bag.fit(dl, tl)
     print(bag.score(dt, tt))
+    bag_online = BayesianBaggingClassifier(n_estimators=25)
+    bag_online.online_fit(dl, tl)
+    print(bag_online.score(dt, tt))
