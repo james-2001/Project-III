@@ -1,9 +1,7 @@
-from numpy import array_split, array, delete, partition
-import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from numpy.random import dirichlet, exponential
 from statistics import mode 
-from sklearn.datasets import make_classification, load_digits
+from sklearn.datasets import make_classification
 
 class BayesianBaggingClassifier:
     def __init__(self, n_estimators) -> None:
