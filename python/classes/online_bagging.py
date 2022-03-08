@@ -12,7 +12,7 @@ class OnlineBaggingClassifier:
         self.bagged_data = [{"data": [], "target": []}
                             for _ in range(n_estimators)]
 
-    def online_fit(self, data, target):
+    def fit(self, data, target):
         for i in range(len(target)):
             self.process(data[i], target[i])
         self.estimators = [DecisionTreeClassifier().fit(x["data"], x["target"])
@@ -43,5 +43,5 @@ if __name__ == "__main__":
     d_learn, t_learn = d[:210], t[:210]
     d_train, t_train = d[210:], t[210:]
     online_bag = OnlineBaggingClassifier()
-    online_bag.online_fit(d_learn, t_learn)
+    online_bag.fit(d_learn, t_learn)
     print(online_bag.score(d_train, t_train))

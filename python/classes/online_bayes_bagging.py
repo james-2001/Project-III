@@ -11,7 +11,7 @@ class OnlineBayesianBaggingClassifier(OnlineBaggingClassifier):
         self.bagged_data = [{"data": [], "target": [], "weight": []}
                             for _ in range(n_estimators)]
 
-    def online_fit(self, data, target):
+    def fit(self, data, target):
         for i in range(len(target)):
             self.process(data[i], target[i])
         self.estimators = [DecisionTreeClassifier().fit(x["data"], x["target"],
@@ -34,8 +34,8 @@ if __name__ == "__main__":
     d_learn, t_learn = d[:210], t[:210]
     d_train, t_train = d[210:], t[210:]
     bbag = OnlineBayesianBaggingClassifier()
-    bbag.online_fit(d_learn, t_learn)
+    bbag.fit(d_learn, t_learn)
     print(bbag.score(d_train, t_train))
     bag = OnlineBaggingClassifier()
-    bag.online_fit(d_learn, t_learn)
+    bag.fit(d_learn, t_learn)
     print(bag.score(d_train, t_train))
