@@ -1,3 +1,4 @@
+from random import shuffle
 from numpy.random import poisson
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import make_classification
@@ -8,9 +9,9 @@ class OnlineBaggingClassifier:
     def __init__(self, n_estimators=25) -> None:
         self.r = n_estimators
         self.estimators = []
-        self.bagged_data = [{"Data": [], "Target": []}*n_estimators]
+        self.bagged_data = [{"data": [], "target": []} for _ in range(n_estimators)]
 
-    def online_bag(self, data, target):
+    def online_fit(self, data, target):
         for i in range(len(target)):
             self.process(data[i], target[i])
         self.estimators = [DecisionTreeClassifier().fit(x["data"], x["target"])
@@ -34,5 +35,12 @@ class OnlineBaggingClassifier:
 
 
 if __name__ == "__main__":
-    d, t = make_classification()
+    d, t = make_classification(n_samples=300)
+    full = list(zip(d, t))
+    shuffle(full)
+    d, t = zip(*full)
+    d_learn, t_learn = d[:210], t[:210]
+    d_train, t_train = d[210:], t[210:]
     online_bag = OnlineBaggingClassifier()
+    online_bag.online_fit(d_learn, t_learn)
+    print(online_bag.score(d_train,t_train))
