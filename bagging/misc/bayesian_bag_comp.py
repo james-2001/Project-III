@@ -1,4 +1,6 @@
-from bayesian_bagging import BayesianBaggingClassifier
+from bagging.utils.bayesian_bagging import BayesianBaggingClassifier
+from bagging.utils.online_bagging import OnlineBaggingClassifier
+from bagging.utils.online_bayes_bagging import OnlineBayesianBaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import BaggingClassifier
 from sklearn.datasets import make_classification, load_iris, load_digits, load_wine

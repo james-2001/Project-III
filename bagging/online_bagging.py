@@ -32,7 +32,7 @@ class OnlineBaggingClassifier:
     def score(self, d, t):
         n = len(t)
         predictions = self.ob_predict(d)
-        return sum([predictions[i] != t[i] for i in range(n)])/n
+        return sum([predictions[i] == t[i] for i in range(n)])/n
 
 
 if __name__ == "__main__":

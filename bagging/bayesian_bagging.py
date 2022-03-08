@@ -68,7 +68,7 @@ class BayesianBaggingClassifier:
     def score(self, t_data, t_target):
         n = len(t_target)
         preds = self.bb_predict(t_data)
-        return sum([preds[i] != t_target[i] for i in range(n)])/n
+        return sum([preds[i] == t_target[i] for i in range(n)])/n
 
 
 if __name__ == "__main__":
