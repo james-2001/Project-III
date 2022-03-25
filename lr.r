@@ -1,10 +1,9 @@
 library(boot)
+library(mc2d)
 
-surv <- survival[-13, ]
+surv <- survival[-13,]
 model <- lm(log(surv) ~ dose, data = surv)
-plot(surv$dose, log(surv$surv))
-abline(model)
-n<-nrow(surv)
+n <- nrow(surv)
 
 b0 <- model$coefficients[1]
 b1 <- model$coefficients[2]
@@ -20,11 +19,25 @@ b <- data.frame(b0 = rep(0, 5000),
 boot_data <- data.frame(x = surv$dose,
                         y = rep(0, n))
 for (i in 1:5000) {
-    for (j in 1:n) {
-        e <- sample(r1, 1)
-        boot_data$y[j] <- b0 + (b1 * boot_data$x[j]) + e
-    }
+    e <- sample(r1, n, replace = T)
+    boot_data$y <- b0 + (b1 * surv$dose) + e
     b_model <- lm(y ~ x, data = boot_data)
-    b$b0[i] <- b_model$coefficients[1]
-    b$b1[i] <- b_model$coefficients[2]
+    b[i, ] <- b_model$coefficients
 }
+
+bb <- data.frame(b0 = rep(0, 5000),
+                 b1 = rep(0, 5000))
+boot_data <- data.frame(x = surv$dose,
+                        y = rep(0, n))
+# for (i in 1:5000) {
+#     e <- r1 * n * rdirichlet(1, rep(1, n))
+#     boot_data$y <- c(b0 + (b1 * surv$dose) + e)
+#     b_model <- lm(y ~ x, data = boot_data)
+#     bb[i, ] <- b_model$coefficients
+# }
+
+beta <- function(data, i){
+    data = data[i, ]
+    lm(log(surv)~ dose, data = data)$coefficients
+}
+b0<-boot(surv, beta0, 5000)

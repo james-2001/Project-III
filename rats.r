@@ -7,7 +7,7 @@ model <- lm(log(surv) ~ dose, data = survival[-13,])
 n <- nrow(survival[-13,])
 
 dev.new(width = 20, height = 20)
-pdf("ratlm4.pdf")
+#pdf("ratlm4.pdf")
 par(mar = c(5,6,4,1)+.1)
 plot(survival$dose, log(survival$surv),
      xlab = "Dose", ylab = "Log(survival rate)",
@@ -22,7 +22,7 @@ for (i in 1:R) {
 }
 
 dev.new()
-pdf("t_hist.pdf")
+#pdf("t_hist.pdf")
 par(mar = c(5,6,4,1)+.1)
 hist(t, cex.lab = 2, main = NULL)
 abline(v = quantile(t, c(0.025, 0.975)), col = "red")
@@ -38,7 +38,7 @@ theta_hat <- function(data,i){
 eb_t <- boot(model$residuals, theta_hat, R = 5000)
 
 dev.new()
-pdf("cd_compare.pdf")
+#pdf("cd_compare.pdf")
 plot(ecdf(t),
      main = NULL,
      cex.lab = 1.5)

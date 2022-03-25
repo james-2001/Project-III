@@ -1,11 +1,11 @@
 from sklearn.tree import DecisionTreeClassifier
 from numpy.random import dirichlet, exponential, seed
 from statistics import mode
-from sklearn.datasets import make_classification
+from sklearn.datasets import load_wine, make_classification, load_iris
 from random import shuffle
 
 class BayesianBaggingClassifier:
-    def __init__(self, n_estimators) -> None:
+    def __init__(self, n_estimators=25) -> None:
         self.data = []
         self.target = []
         self.r = n_estimators
@@ -24,23 +24,6 @@ class BayesianBaggingClassifier:
                for weight in dirichlet([1]*loc_n, self.r)]
         return bag
 
-    def online_fit(self, data, target):
-        self.n = len(target)
-        bagged_data = [{"data": [], "target": [], "weight": []}
-                       for _ in range(self.r)]
-        for i in range(self.n):
-            bagged_data = self.online_process(data[i], target[i], bagged_data)
-        self.estimators = [DecisionTreeClassifier().fit(learn["data"],
-                           learn["target"], sample_weight=learn["weight"])
-                           for learn in bagged_data]
-
-    def online_process(self, point, target, bagged_data):
-        for i in range(self.r):
-            k = exponential()
-            bagged_data[i]["data"] += [point]
-            bagged_data[i]["target"] += [target]
-            bagged_data[i]["weight"] += [k]
-        return bagged_data
 
     def bb_predict(self, new_data, bag=None):
         if bag is None:
@@ -72,16 +55,15 @@ class BayesianBaggingClassifier:
 
 
 if __name__ == "__main__":
-    seed(0)
-    d, t = make_classification()
-    m = list(zip(d, t))
-    shuffle(m)
-    d, t = zip(*m)
-    dl, tl = d[:30], t[:30]
-    dt, tt = d[30:], t[30:]
-    bag = BayesianBaggingClassifier(n_estimators=25)
-    bag.fit(dl, tl)
-    print(bag.score(dt, tt))
-    bag_online = BayesianBaggingClassifier(n_estimators=25)
-    bag_online.online_fit(dl, tl)
-    print(bag_online.score(dt, tt))
+    iris = load_wine()
+    d,t = iris.data, iris.target
+    f = list(zip(d,t))
+    shuffle(f)
+    d,t = zip(*f)
+    d_l, t_l, d_t, t_t = d[:100], t[:100], d[100:], t[100:]
+    bag = BayesianBaggingClassifier()
+    bag.fit(d_l, t_l)
+    print(bag.score(d_t,t_t))
+    clf = DecisionTreeClassifier().fit(d_l, t_l)
+    print(clf.score(d_t, t_t))
+

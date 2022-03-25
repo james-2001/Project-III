@@ -16,4 +16,4 @@ theta_hat <- function(data, index){
   return(cor(data[index,1], data[index,2]))
 }
 
-boot_library <- boot(law, theta_hat, R = 5000)$t0
+boot_library <- boot(acme, theta_hat, R = 5000)$t0
