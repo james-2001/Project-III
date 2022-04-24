@@ -24,7 +24,6 @@ class BayesianBaggingClassifier:
                for weight in dirichlet([1]*loc_n, self.r)]
         return bag
 
-
     def bb_predict(self, new_data, bag=None):
         if bag is None:
             bag = self.estimators
