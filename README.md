@@ -1,2 +1,2 @@
 # Project-III
-This folder contains code used for my third year project. 
+This repo contains code used for my third year project. 
